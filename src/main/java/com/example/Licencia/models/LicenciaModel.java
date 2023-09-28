@@ -23,4 +23,7 @@ public class LicenciaModel {
     private String Proveedor;
     private String EmpresaMatriz;
 
+    @ManyToOne
+    @JoinColumn(name = "funcionario_id")
+    private Funcionario funcionario;
 }
