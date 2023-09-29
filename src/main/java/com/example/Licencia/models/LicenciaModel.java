@@ -1,6 +1,7 @@
 package com.example.Licencia.models;
 
 import java.sql.Date;
+import java.util.List;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -26,4 +27,5 @@ public class LicenciaModel {
     @ManyToOne
     @JoinColumn(name = "funcionario_id")
     private Funcionario funcionario;
+    
 }
