@@ -3,6 +3,10 @@ package com.example.Licencia.models;
 import java.sql.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -24,8 +28,9 @@ public class LicenciaModel {
     private String Proveedor;
     private String EmpresaMatriz;
 
-    @ManyToOne
-    @JoinColumn(name = "funcionario_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "funcionario")
+    @JsonIgnoreProperties("licencias")
     private Funcionario funcionario;
     
 }

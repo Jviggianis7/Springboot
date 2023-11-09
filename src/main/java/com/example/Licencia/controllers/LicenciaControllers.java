@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,10 +14,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.Licencia.models.LicenciaModel;
 import com.example.Licencia.repositories.LicenciaRepository;
+import com.example.Licencia.repositories.LicenciaSpec;
+
 
 @RestController
 @RequestMapping("/licencia")
@@ -24,7 +29,7 @@ public class LicenciaControllers {
     @Autowired
     private LicenciaRepository licenciaRepository;
 
-    @GetMapping
+    @GetMapping("/licencias")
     public List<LicenciaModel> getAlllicencias(){
         return licenciaRepository.findAll();
     }
@@ -57,7 +62,6 @@ public class LicenciaControllers {
             licencia.setFecha_fin(upLicencia.getFecha_fin());
             licencia.setProveedor(upLicencia.getProveedor());
             licencia.setEmpresaMatriz(upLicencia.getEmpresaMatriz());
-
             licenciaRepository.save(licencia);
             return ResponseEntity.ok(licencia);
         }
@@ -77,6 +81,28 @@ public class LicenciaControllers {
         else{
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/funcionario/{idFuncio}")
+    public ResponseEntity<List<LicenciaModel>> getLicenByFunc(@PathVariable Long idFuncio){
+        Specification<LicenciaModel> spec = LicenciaSpec.getLincenFuncio(idFuncio);
+        List<LicenciaModel> result = licenciaRepository.findAll(spec);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
+
+    @GetMapping("/nameL/{idFuncio}")
+    public ResponseEntity<List<LicenciaModel>> getLicenByFuncioName(@PathVariable Long idFuncio, 
+    @RequestParam ("nombreLicencia") String nameLicen){
+        Specification<LicenciaModel> spec = LicenciaSpec.getLicenName(idFuncio, nameLicen);
+        List<LicenciaModel> getLicenName = licenciaRepository.findAll(spec);
+        return ResponseEntity.status(HttpStatus.OK).body(getLicenName);
+    }
+
+    @GetMapping("/desactivada")
+    public ResponseEntity<List<LicenciaModel>> getStatusLicen(){
+        Specification<LicenciaModel> spec = LicenciaSpec.getLicenStatus();
+        List<LicenciaModel> status = licenciaRepository.findAll(spec);
+        return ResponseEntity.status(HttpStatus.OK).body(status);
     }
 
 }

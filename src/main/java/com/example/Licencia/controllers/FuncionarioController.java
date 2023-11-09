@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.Licencia.models.Funcionario;
 import com.example.Licencia.models.LicenciaModel;
 import com.example.Licencia.repositories.FuncionarioRepository;
+import com.example.Licencia.repositories.FuncionarioSpec;
 import com.example.Licencia.repositories.LicenciaRepository;
 
 @RestController
@@ -61,7 +64,6 @@ public class FuncionarioController {
             funcionario.setTelefono(upFuncionario.getTelefono());
             funcionario.setCorreo(upFuncionario.getCorreo());
             funcionario.setOficina(upFuncionario.getOficina());
-            funcionario.setLicencias(upFuncionario.getLicencias());
 
             funcionarioRepository.save(funcionario);
             return ResponseEntity.ok(funcionario);
@@ -92,5 +94,14 @@ public class FuncionarioController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/funcionario2Licen")
+    public ResponseEntity<List<Funcionario>> getfuncionario2Licen(){
+        Specification<Funcionario> spec = FuncionarioSpec.funcionarioByServer();
+        List<Funcionario> funcionarios = funcionarioRepository.findAll(spec);
+        return ResponseEntity.status(HttpStatus.OK).body(funcionarios);
+
+
     }
 }
